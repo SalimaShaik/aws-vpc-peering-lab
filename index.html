@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AWS VPC Peering Lab</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+      line-height: 1.6;
+    }
+    header {
+      background: #172554;
+      color: white;
+      text-align: center;
+      padding: 38px 18px;
+    }
+    header h1 { margin: 0 0 8px; }
+    header p { margin: 0; color: #dbeafe; }
+    main { max-width: 1000px; margin: auto; padding: 24px 16px; }
+    section {
+      background: white;
+      padding: 22px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px #0000000d;
+    }
+    h2 { color: #1d4ed8; margin-top: 0; }
+    .architecture {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .vpc {
+      border: 2px solid #60a5fa;
+      border-radius: 10px;
+      padding: 16px;
+      flex: 1 1 260px;
+      background: #eff6ff;
+    }
+    .vpc h3 { margin-top: 0; }
+    .instance {
+      background: white;
+      border: 1px solid #bfdbfe;
+      border-radius: 7px;
+      padding: 10px;
+      margin-top: 10px;
+    }
+    .peer {
+      align-self: center;
+      text-align: center;
+      font-weight: bold;
+      color: #047857;
+      min-width: 125px;
+    }
+    .peer span { display: block; font-size: 26px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td {
+      text-align: left;
+      padding: 11px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    th { background: #eff6ff; }
+    .note {
+      background: #fff7ed;
+      border-left: 4px solid #f59e0b;
+      padding: 12px;
+      border-radius: 4px;
+    }
+    .tag {
+      display: inline-block;
+      background: #fef3c7;
+      color: #92400e;
+      padding: 3px 9px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    footer { text-align: center; padding: 20px; color: #64748b; }
+    @media (max-width: 600px) {
+      .peer { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>AWS VPC Peering Lab</h1>
+    <p>Private Network Connectivity Between Two Amazon VPCs</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>Project Overview</h2>
+      <p>
+        This project demonstrates how two separate Amazon Virtual Private
+        Clouds (VPCs) can communicate using a VPC Peering connection.
+        The design includes private subnets, EC2 instances, route tables,
+        and security groups.
+      </p>
+      <p><strong>Cloud platform:</strong> Amazon Web Services (AWS)</p>
+      <p><strong>Region planned:</strong> Mumbai (ap-south-1)</p>
+      <p><strong>Project type:</strong> Cloud Networking</p>
+    </section>
+
+    <section>
+      <h2>Network Architecture</h2>
+      <div class="architecture">
+        <div class="vpc">
+          <h3>VPC A</h3>
+          <p>CIDR: 10.10.0.0/16</p>
+          <div class="instance">
+            <strong>Bastion Host</strong><br>
+            10.10.1.10<br>
+            <small>Public subnet; SSH entry point</small>
+          </div>
+          <div class="instance">
+            <strong>App-A</strong><br>
+            10.10.2.10<br>
+            <small>Private subnet</small>
+          </div>
+        </div>
+
+        <div class="peer">
+          <span>⇄</span>
+          VPC Peering
+          <small><br>Private IP routing</small>
+        </div>
+
+        <div class="vpc">
+          <h3>VPC B</h3>
+          <p>CIDR: 10.20.0.0/16</p>
+          <div class="instance">
+            <strong>App-B</strong><br>
+            10.20.1.10<br>
+            <small>Private subnet</small>
+          </div>
+        </div>
+      </div>
+      <p class="note">
+        This diagram illustrates the planned architecture. It does not
+        indicate that these resources have already been created in AWS.
+      </p>
+    </section>
+
+    <section>
+      <h2>Expected Connectivity Results</h2>
+      <p><span class="tag">EXPECTED RESULTS — NOT LIVE TESTS</span></p>
+      <table>
+        <thead>
+          <tr><th>Test</th><th>Expected result</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Before peering and routes are configured</td><td>Ping fails</td></tr>
+          <tr><td>App-A to App-B after configuration</td><td>Ping succeeds</td></tr>
+          <tr><td>App-B to App-A after configuration</td><td>Ping succeeds</td></tr>
+          <tr><td>Required ICMP rule temporarily removed</td><td>Ping fails</td></tr>
+          <tr><td>ICMP rule restored</td><td>Ping succeeds</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Key Learning Outcomes</h2>
+      <ul>
+        <li>Understanding VPCs and subnet CIDR ranges.</li>
+        <li>Configuring VPC Peering connections.</li>
+        <li>Updating route tables for private network communication.</li>
+        <li>Controlling access through security group rules.</li>
+        <li>Testing network connectivity and troubleshooting failures.</li>
+        <li>Cleaning up cloud resources to avoid unnecessary charges.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Conclusion</h2>
+      <p>
+        The planned lab demonstrates how VPC Peering can enable private
+        communication between workloads in two VPCs without requiring
+        public IP addresses on the application instances.
+      </p>
+      <p>
+        Actual AWS deployment and connectivity verification remain to be
+        completed.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    AWS VPC Peering Lab | Educational Project Demonstration
+  </footer>
+</body>
+</html>
